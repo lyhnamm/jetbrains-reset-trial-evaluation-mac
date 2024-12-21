@@ -22,23 +22,25 @@ if [ "$1" = "--prepare-env" ]; then
 fi
 
 if [ "$1" = "--launch-agent" ]; then
-  PROCESS=(idea webstorm datagrip phpstorm clion pycharm goland rubymine rider)
+  #PROCESS=(idea webstorm datagrip phpstorm clion pycharm goland rubymine rider)
+  PROCESS=(idea)
   COMMAND_PRE=("${PROCESS[@]/#/MacOS/}")
+  echo $COMMAND_PRE
 
   # Kill all Intellij applications
   kill -9 `ps aux | egrep $(IFS=$'|'; echo "${COMMAND_PRE[*]}") | awk '{print $2}'`
 fi
 
-# Reset Intellij evaluation
+# Reset JetBrains products trial evaluation
 #for product in IntelliJIdea WebStorm DataGrip PhpStorm CLion PyCharm GoLand RubyMine Rider; do
-for product in Rider; do
+for product in IntelliJIdea; do
   echo "Resetting trial period for $product"
 
 #  echo "removing evaluation key..."
 #  rm -rf ~/Library/Preferences/$product*/eval
 
   # Above path not working on latest version. Fixed below
-  rm -rf ~/Library/Application\ Support/JetBrains/$product*/eval/*.key
+  rm -rf ~/Library/Application\ Support/JetBrains/$product*/*.key
 
 #  echo "removing all evlsprt properties in options.xml..."
 #  sed -i '' '/evlsprt/d' ~/Library/Preferences/$product*/options/other.xml
@@ -47,9 +49,10 @@ for product in Rider; do
   sed -i '' '/evlsprt/d' ~/Library/Application\ Support/JetBrains/$product*/options/other.xml
 
   echo
+  echo "Done!"
 done
 
-echo "removing additional plist files..."
+echo "Removing additional plist files..."
 rm -f ~/Library/Preferences/com.apple.java.util.prefs.plist
 rm -f ~/Library/Preferences/com.jetbrains.*.plist
 rm -f ~/Library/Preferences/jetbrains.*.*.plist
