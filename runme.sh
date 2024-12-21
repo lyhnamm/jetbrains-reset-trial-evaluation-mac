@@ -14,7 +14,12 @@ if [ "$1" = "--prepare-env" ]; then
 
   echo
   echo "Loading job into launchctl"
-  launchctl load ~/Library/LaunchAgents/com.jetbrains.reset.plist
+  CHECK="$( launchctl list | grep jetbrains | awk '{print $3}' )"
+
+  if [ ! -z $CHECK ]; then
+    launchctl unload -w ~/Library/LaunchAgents/com.jetbrains.reset.plist
+  fi
+  launchctl load -w ~/Library/LaunchAgents/com.jetbrains.reset.plist
 
   echo
   echo "That's it, enjoy ;)"
